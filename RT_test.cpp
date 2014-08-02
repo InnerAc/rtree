@@ -65,6 +65,8 @@ int main()
   for(i=0;i<num_of_rects;i++){
     cin>>x0>>y0>>wi>>hi>>k;
     rects[i] = Rect(x0, y0, x0+wi, y0+hi);
+    ///插入函数
+    /// \param 最小点坐标,最大点坐标,id,种类 
     tree.Insert(rects[i].min, rects[i].max, i, k); // Note, all values including zero are fine in this version
   }
   //int nrects = sizeof(rects) / sizeof(rects[0]);
@@ -73,11 +75,17 @@ int main()
   cin>>x0>>y0>>wi>>hi>>k;
   Rect search_rect(x0, y0,x0+wi, y0+hi); // search will find above rects that this one overlaps
   //tree.Remove(rects[6].min,rects[6].max,6);   //remove the leafnode from R-tree
+
+  ///查询函数
+  /// \param 最小点坐标,最大点坐标,返回函数指针,联系,种类
   nhits = tree.Search(search_rect.min, search_rect.max, MySearchCallback, NULL,k);
 
   cout << "Search resulted in " << nhits << " hits\n";
+
+  ///删除所有的条目
   tree.RemoveAll();   //Remove all of node and the tree
   // Iterator test
+  // 遍历输出所有条目(执行里RemoveAll 所以为空)
   int itIndex = 0;
   MyTree::Iterator it;
   for( tree.GetFirst(it);
@@ -104,19 +112,5 @@ int main()
 
   return 0;
 
-  // Output:
-  //
-  // nrects = 4
-  // Hit data rect 1
-  // Hit data rect 2
-  // Search resulted in 2 hits
-  // it[0] 0 = (0,0,2,2)
-  // it[1] 1 = (5,5,7,7)
-  // it[2] 2 = (8,5,9,6)
-  // it[3] 3 = (7,1,9,2)
-  // it[0] 0
-  // it[1] 1
-  // it[2] 2
-  // it[3] 3
 }
 
