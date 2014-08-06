@@ -8,10 +8,18 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
-
+#include <list>
 #include <algorithm>
 
+using namespace std;
+
 typedef int KINDTYPE;
+
+//test
+class XMLNode;
+typedef std::list <XMLNode*> XMLNodeList;
+//test-end
+
 
 #define ASSERT assert // RTree uses ASSERT( condition )
 #ifndef Min
@@ -24,7 +32,41 @@ typedef int KINDTYPE;
 //
 // RTree.h
 //
+//test
+enum NodeType
+{
+  notDef,
+  root,
+  element,
+  text,
+  DTD
 
+};
+
+//
+class XMLNode
+{
+public:
+  // XMLNode();
+  // ~XMLNode();
+  NodeType m_nodeType;
+  char *m_pTagNameStart;//标签名称
+  char *m_pTagNameEnd;
+  char *m_pIDStart;//ID名称
+  char *m_pIDEnd;
+  char *m_pStart;//信息区域的文件指针，指向区域开始处
+  char *m_pValidEnd;////信息区域的文件指针，指向区域有意义的结束处，即对于<></>这种类型，仅仅包含在<>中有效信息的这一区域
+  char *m_pEnd;//信息区域的文件指针，指向区域结束处
+  unsigned long m_childLen;//包含子节点个数
+  unsigned long m_totalChildLen;//包含该节点往下所有的结点个数
+  XMLNodeList m_childNode;
+};
+
+//typedef int DATATYPE;
+
+typedef XMLNode DATATYPE;
+//test-end
+//
 #define RTREE_TEMPLATE template<class DATATYPE, class ELEMTYPE, int NUMDIMS, class ELEMTYPEREAL, int TMAXNODES, int TMINNODES>
 #define RTREE_QUAL RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES >
 
@@ -143,23 +185,23 @@ public:
     bool IsNotNull()                              { return (m_tos > 0); }
 
     /// Access the current data element. Caller must be sure iterator is not NULL first.
-    DATATYPE& operator*()
-    {
-      ASSERT(IsNotNull());
-      StackElement& curTos = m_stack[m_tos - 1];
-      return curTos.m_node->m_branch[curTos.m_branchIndex].m_data;
-    } 
+    // DATATYPE& operator*()
+    // {
+    //   ASSERT(IsNotNull());
+    //   StackElement& curTos = m_stack[m_tos - 1];
+    //   return curTos.m_node->m_branch[curTos.m_branchIndex].m_data;
+    // } 
 
-    /// Access the current data element. Caller must be sure iterator is not NULL first.
-    const DATATYPE& operator*() const
-    {
-      ASSERT(IsNotNull());
-      StackElement& curTos = m_stack[m_tos - 1];
-      return curTos.m_node->m_branch[curTos.m_branchIndex].m_data;
-    } 
+    // /// Access the current data element. Caller must be sure iterator is not NULL first.
+    // const DATATYPE& operator*() const
+    // {
+    //   ASSERT(IsNotNull());
+    //   StackElement& curTos = m_stack[m_tos - 1];
+    //   return curTos.m_node->m_branch[curTos.m_branchIndex].m_data;
+    // } 
 
-    /// Find the next data element
-    bool operator++()                             { return FindNextData(); }
+    // /// Find the next data element
+    // bool operator++()                             { return FindNextData(); }
 
     /// Get the bounds for this node
     void GetBounds(ELEMTYPE a_min[NUMDIMS], ELEMTYPE a_max[NUMDIMS])
